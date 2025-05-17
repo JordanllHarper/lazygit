@@ -3,6 +3,9 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -230,29 +233,60 @@ func (self *StatusController) showDashboard() {
 
 func (self *StatusController) clone() error {
 	self.c.Prompt(types.PromptOpts{
-		// TODO: Add this to translations
-		Title: self.c.Tr.RepositoryUrl,
-		HandleConfirm: func(url string) error {
-			err := self.c.Git().Clone.SetRemoteRepository(url)
-			if err != nil {
-				// TODO: Make sure this is the right way to handle errors
-				return err
-			}
-			recentRepos := self.c.GetAppState().RecentRepos
-			// TODO: Get repository name
+		Title: self.c.Tr.RepositoryName,
+		HandleConfirm: func(repoName string) error {
+			self.c.Prompt(types.PromptOpts{
+				Title: self.c.Tr.RepositoryUrl,
+				HandleConfirm: func(repoUrl string) error {
+					// TODO: Other edge cases such as "/" or "."
+					if repoName == "" {
+						repoName = strings.TrimSuffix(path.Base(repoUrl), path.Ext(repoUrl))
+					}
 
-			recentRepos = newRecentReposList(recentRepos, newRepo)
-			/*
-				TODO:
-				- Add to recent repositories
-				- Show prompt for switching to the new repo
-				- If enter: switch
-				- If esc: cancel and go to main pane
-			*/
+					err := self.c.Git().Clone.SetRemoteRepository(repoUrl, repoName)
+					if err != nil {
+						return err
+					}
+
+					recentRepos := self.c.GetAppState().RecentRepos
+					recentRepos = newRecentReposList(recentRepos, repoName)
+
+					// WARNING: This feels hacky.
+					self.c.GetConfig().GetAppState().RecentRepos = recentRepos
+
+					self.c.Confirm(types.ConfirmOpts{
+						Title:  "Checkout repository",
+						Prompt: "Would you like to checkout the repository?",
+					})
+
+					/*
+						TODO:
+						- Show prompt for switching to the new repo
+						- If enter: switch
+						- If esc: cancel and go to main pane
+					*/
+					return nil
+				},
+			})
 			return nil
 		},
 	})
 	return nil
+}
+
+// NOTE: This is taken from recent_repos panel. Duplicate code.
+// TODO: We probably need to export this or just append to the list using append()
+func newRecentReposList(recentRepos []string, currentRepo string) []string {
+	newRepos := []string{currentRepo}
+	for _, repo := range recentRepos {
+		if repo != currentRepo {
+			if _, err := os.Stat(filepath.Join(repo, ".git")); err != nil {
+				continue
+			}
+			newRepos = append(newRepos, repo)
+		}
+	}
+	return newRepos
 }
 
 func (self *StatusController) handleCheckForUpdate() error {
