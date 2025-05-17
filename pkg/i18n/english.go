@@ -1097,6 +1097,7 @@ const englishNonReloadableConfigWarning = `The following config settings were ch
 // exporting this so we can use it in tests
 func EnglishTranslationSet() *TranslationSet {
 	return &TranslationSet{
+		Clone:                                "Clone",
 		NotEnoughSpace:                       "Not enough space to render panels",
 		DiffTitle:                            "Diff",
 		FilesTitle:                           "Files",
