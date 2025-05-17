@@ -53,6 +53,12 @@ func (self *StatusController) GetKeybindings(opts types.KeybindingsOpts) []*type
 			DisplayOnScreen: true,
 		},
 		{
+			Key:             opts.GetKey(opts.Config.Status.Clone),
+			Handler:         self.clone,
+			Description:     self.c.Tr.Clone,
+			DisplayOnScreen: true,
+		},
+		{
 			Key:             opts.GetKey(opts.Config.Status.RecentRepos),
 			Handler:         self.c.Helpers().Repos.CreateRecentReposMenu,
 			Description:     self.c.Tr.SwitchRepo,
@@ -219,6 +225,20 @@ func (self *StatusController) showDashboard() {
 			Task:  types.NewRenderStringTask(dashboardString),
 		},
 	})
+}
+
+func (self *StatusController) clone() error {
+	/* TODO:
+	- Get clone prompt to input url
+	- Execute clone
+	- Add to recent repositories
+	- Show prompt for switching to the new repo
+	- If enter: switch
+	- If esc: cancel and go to main pane
+
+	*/
+
+	return nil
 }
 
 func (self *StatusController) handleCheckForUpdate() error {
