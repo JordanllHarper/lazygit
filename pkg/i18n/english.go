@@ -895,6 +895,7 @@ type TranslationSet struct {
 	BreakingChangesTitle                     string
 	BreakingChangesMessage                   string
 	BreakingChangesByVersion                 map[string]string
+	Clone                                    string
 }
 
 type Bisect struct {
