@@ -896,6 +896,7 @@ type TranslationSet struct {
 	BreakingChangesMessage                   string
 	BreakingChangesByVersion                 map[string]string
 	Clone                                    string
+	RepositoryUrl                            string
 }
 
 type Bisect struct {
@@ -1098,6 +1099,7 @@ const englishNonReloadableConfigWarning = `The following config settings were ch
 func EnglishTranslationSet() *TranslationSet {
 	return &TranslationSet{
 		Clone:                                "Clone",
+		RepositoryUrl:                        "Repository url",
 		NotEnoughSpace:                       "Not enough space to render panels",
 		DiffTitle:                            "Diff",
 		FilesTitle:                           "Files",
