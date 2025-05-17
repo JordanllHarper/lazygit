@@ -896,6 +896,7 @@ type TranslationSet struct {
 	BreakingChangesMessage                   string
 	BreakingChangesByVersion                 map[string]string
 	Clone                                    string
+	RepositoryName                           string
 	RepositoryUrl                            string
 }
 
@@ -1100,6 +1101,7 @@ func EnglishTranslationSet() *TranslationSet {
 	return &TranslationSet{
 		Clone:                                "Clone",
 		RepositoryUrl:                        "Repository url",
+		RepositoryName:                       "Repository name",
 		NotEnoughSpace:                       "Not enough space to render panels",
 		DiffTitle:                            "Diff",
 		FilesTitle:                           "Files",
