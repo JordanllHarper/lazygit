@@ -447,6 +447,7 @@ type KeybindingStatusConfig struct {
 	CheckForUpdate      string `yaml:"checkForUpdate"`
 	RecentRepos         string `yaml:"recentRepos"`
 	AllBranchesLogGraph string `yaml:"allBranchesLogGraph"`
+	Clone               string `yaml:"clone"`
 }
 
 type KeybindingFilesConfig struct {
