@@ -53,7 +53,8 @@ func (self *StatusController) GetKeybindings(opts types.KeybindingsOpts) []*type
 			DisplayOnScreen: true,
 		},
 		{
-			Key:             opts.GetKey(opts.Config.Status.Clone),
+			// TODO: Change to Config Key
+			Key:             opts.GetKey("c"),
 			Handler:         self.clone,
 			Description:     self.c.Tr.Clone,
 			DisplayOnScreen: true,
@@ -228,16 +229,29 @@ func (self *StatusController) showDashboard() {
 }
 
 func (self *StatusController) clone() error {
-	/* TODO:
-	- Get clone prompt to input url
-	- Execute clone
-	- Add to recent repositories
-	- Show prompt for switching to the new repo
-	- If enter: switch
-	- If esc: cancel and go to main pane
+	self.c.Prompt(types.PromptOpts{
+		// TODO: Add this to translations
+		Title: self.c.Tr.RepositoryUrl,
+		HandleConfirm: func(url string) error {
+			err := self.c.Git().Clone.SetRemoteRepository(url)
+			if err != nil {
+				// TODO: Make sure this is the right way to handle errors
+				return err
+			}
+			recentRepos := self.c.GetAppState().RecentRepos
+			// TODO: Get repository name
 
-	*/
-
+			recentRepos = newRecentReposList(recentRepos, newRepo)
+			/*
+				TODO:
+				- Add to recent repositories
+				- Show prompt for switching to the new repo
+				- If enter: switch
+				- If esc: cancel and go to main pane
+			*/
+			return nil
+		},
+	})
 	return nil
 }
 
