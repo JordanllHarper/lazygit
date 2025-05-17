@@ -19,6 +19,7 @@ import (
 type GitCommand struct {
 	Blame       *git_commands.BlameCommands
 	Branch      *git_commands.BranchCommands
+	Clone       *git_commands.CloneCommands
 	Commit      *git_commands.CommitCommands
 	Config      *git_commands.ConfigCommands
 	Custom      *git_commands.CustomCommands
@@ -133,6 +134,7 @@ func NewGitCommandAux(
 	bisectCommands := git_commands.NewBisectCommands(gitCommon)
 	worktreeCommands := git_commands.NewWorktreeCommands(gitCommon)
 	blameCommands := git_commands.NewBlameCommands(gitCommon)
+	cloneCommands := git_commands.NewCloneCommands(gitCommon)
 
 	branchLoader := git_commands.NewBranchLoader(cmn, gitCommon, cmd, branchCommands.CurrentBranchInfo, configCommands)
 	commitFileLoader := git_commands.NewCommitFileLoader(cmn, cmd)
@@ -146,6 +148,7 @@ func NewGitCommandAux(
 	return &GitCommand{
 		Blame:       blameCommands,
 		Branch:      branchCommands,
+		Clone:       cloneCommands,
 		Commit:      commitCommands,
 		Config:      configCommands,
 		Custom:      customCommands,
